@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Index - Sarasa</title>
+    <title>Samarasa</title>
     <meta name="description" content="">
     <meta name="keywords" content="">
 
@@ -39,8 +39,8 @@
             <nav id="navmenu" class="navmenu">
                 <ul>
                     <li><a href="#hero" class="active">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#about">Tentang</a></li>
+                    <li><a href="#contact">Kontak</a></li>
                     <li><a href="{{url('/back')}}">Masuk</a></li>
                 </ul>
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
@@ -57,20 +57,88 @@
                         <h2>Samarasa<br></h2>
                         <p>Sistem Informasi Manajemen Sarana dan Prasarana Bidang PAUD</p>
                     </div>
+
+
                     <div class="col-lg-5 hero-newsletter">
                         <p>Cari Data Sekolah Penerima Bantuan</p>
-                        <form action="forms/newsletter.php" method="post" class="php-email-form">
-                          <div class="newsletter-form"><input placeholder="Nama Sekolah" type="email" name="email"><input type="submit" value="Cari "></div>
-                          <div class="loading">Loading</div>
+                        <form action="{{ route('sekolah.cari') }}" method="POST">
+                          <div class="newsletter-form">
+                            @csrf
+                            <input placeholder="NPSN" type="text" name="query" value="{{ old('query', $query) }}">
+                            <input
+                                type="text" name="captcha" class="form-control @error('captcha') is-invalid @enderror" placeholder="Kode Captcha"
+                                >
+                            <input type="submit" value="Cari "></div>
+                            <img src="{{ captcha_src() }}" alt="captcha">
+                            <div class="mt-2"></div>
+
+                            @error('captcha')
+                            <div class="invalid-feedback">{{ $message }}</div> @enderror
+                          {{-- <div class="loading">Loading</div>
                           <div class="error-message"></div>
-                          <div class="sent-message">Your subscription request has been sent. Thank you!</div>
+                          <div class="sent-message">Your subscription request has been sent. Thank you!</div> --}}
                         </form>
+                          @if(is_null($sekolah))
+                              {{-- <h3>Hasil Pencarian</h3>
+                              <p>Tidak ada sekolah yang ditemukan.</p> --}}
+                          @else
+                              <h3>Hasil Pencarian</h3>
+                              <table class="custom-table">
+                                <tr align="left">
+                                    <td>NPSN</td>
+                                    <td>: {{ $sekolah->npsn ?? 'N/A' }}</td>
+                                </tr>
+                                <tr align="left">
+                                    <td>Nama Sekolah</td>
+                                    <td>: {{ $sekolah->nama_sekolah ?? 'N/A' }}</td>
+                                </tr>
+                                <tr align="left">
+                                    <td>Desa</td>
+                                    <td>: {{ $sekolah->desa ?? 'N/A' }}</td>
+                                </tr>
+                                <tr align="left">
+                                    <td>Kecamatan</td>
+                                    <td>: {{ $sekolah->kecamatan ?? 'N/A' }}</td>
+                                </tr>
+                              </table>
+                          @endif
+                          {{-- <h3>Riwayat Bantuan</h3> --}}
+                          @if(is_null($bantuan))
+                              {{-- <p>Tidak ada bantuan yang ditemukan.</p> --}}
+                          @else
+                          <h3>Riwayat Bantuan</h3>
+                          <center>
+                          <table  class="custom-table">
+                            <tr>
+                                <td align="center">Tahun</td>
+                                <td align="center">Jenis Bantuan</td>
+                                <td align="center">Sumber Dana</td>
+                            </tr>
+                          @foreach($bantuan as $item)
+                            <tr>
+                                <td>
+                                    {{ $item->tahun ?? 'N/A' }}
+                                </td>
+                                <td>
+                                    {{ $item->databantuan->nama_bantuan ?? 'N/A' }}
+                                </td>
+                                <td>
+                                    @php
+                                      $sumberDanaString = is_array($item->sumberdana) ? implode(', ', $item->sumberdana) : $item->sumberdana;
+                                    @endphp
+                                    {{ $sumberDanaString }}
+                                </td>
+                            </tr>
+                            @endforeach
+                        </table>
+                        </center>
+                          @endif
                       </div>
                         <div class="social-links">
                             <a href="#"><i class="bi bi-twitter-x"></i></a>
                             <a href="#"><i class="bi bi-facebook"></i></a>
                             <a href="#"><i class="bi bi-instagram"></i></a>
-                            <a href="#"><i class="bi bi-linkedin"></i></a>
+                            <a href="#"><i class="bi bi-youtube"></i></a>
                         </div>
                     </div>
                 </div>
@@ -80,38 +148,38 @@
         <!-- About Section -->
         <section id="about" class="about section transparent-background">
             <div class="container section-title" data-aos="fade-up">
-                <h2>About</h2>
-                <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+                <h2>Tentang</h2>
+                <p></p>
             </div><!-- End Section Title -->
 
             <div class="container">
                 <div class="row gy-5">
                     <div class="content col-xl-5 d-flex flex-column" data-aos="fade-up" data-aos-delay="100">
-                        <h3>Voluptatem dignissimos provident quasi</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Duis aute irure dolor in reprehenderit</p>
+                        <h3>Sistem Informasi Manajemen Sarana dan Prasarana Bidang PAUD</h3>
+                        <p>Selamat datang di Samarasa, Sistem Informasi Manajemen Sarana dan Prasarana Bidang Pendidikan Anak Usia Dini (PAUD). Samarasa dirancang untuk mempermudah pengelolaan dan penyimpanan data terkait sarana dan prasarana pendidikan, khususnya di sektor PAUD. Dengan fitur yang lengkap, sistem ini memungkinkan pengguna untuk menyimpan berbagai data penting</p>
                     </div>
 
                     <div class="col-xl-7" data-aos="fade-up" data-aos-delay="200">
                         <div class="row gy-4">
                             <div class="col-md-6 icon-box position-relative">
                                 <i class="bi bi-briefcase"></i>
-                                <h4><a href="" class="stretched-link">Corporis voluptates sit</a></h4>
-                                <p>Consequuntur sunt aut quasi enim aliquam quae harum pariatur laboris nisi ut aliquip</p>
+                                <h4><a href="" class="stretched-link">Data Sekolah</a></h4>
+                                <p>Informasi lengkap mengenai lembaga PAUD, termasuk identitas dan lokasi.</p>
                             </div><!-- Icon-Box -->
                             <div class="col-md-6 icon-box position-relative">
                                 <i class="bi bi-gem"></i>
-                                <h4><a href="" class="stretched-link">Ullamco laboris nisi</a></h4>
-                                <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt</p>
+                                <h4><a href="" class="stretched-link">Data Bantuan</a></h4>
+                                <p>Rekam jejak bantuan yang diterima oleh lembaga, baik dari pemerintah maupun pihak lainnya.</p>
                             </div><!-- Icon-Box -->
                             <div class="col-md-6 icon-box position-relative">
                                 <i class="bi bi-broadcast"></i>
-                                <h4><a href="" class="stretched-link">Labore consequatur</a></h4>
-                                <p>Aut suscipit aut cum nemo deleniti aut omnis. Doloribus ut maiores omnis facere</p>
+                                <h4><a href="" class="stretched-link">Data Usulan</a></h4>
+                                <p>Pengajuan bantuan atau pengembangan sarana prasarana yang diajukan oleh sekolah.</p>
                             </div><!-- Icon-Box -->
                             <div class="col-md-6 icon-box position-relative">
                                 <i class="bi bi-easel"></i>
-                                <h4><a href="" class="stretched-link">Beatae veritatis</a></h4>
-                                <p>Expedita veritatis consequuntur nihil tempore laudantium vitae denat pacta</p>
+                                <h4><a href="" class="stretched-link">Data Sarana Prasarana</a></h4>
+                                <p>Inventarisasi dan pemantauan kondisi sarana dan prasarana yang tersedia di masing-masing lembaga.</p>
                             </div><!-- Icon-Box -->
                         </div>
                     </div>
@@ -122,8 +190,8 @@
         <!-- Contact Section -->
         <section id="contact" class="contact section transparent-background">
             <div class="container section-title" data-aos="fade-up">
-                <h2>Contact</h2>
-                <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+                <h2>Kontak</h2>
+                <p>Dinas Pendidikan</p>
             </div><!-- End Section Title -->
 
             <div class="container" data-aos="fade" data-aos-delay="100">
@@ -132,49 +200,35 @@
                         <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="200">
                             <i class="bi bi-geo-alt flex-shrink-0"></i>
                             <div>
-                                <h3>Address</h3>
-                                <p>A108 Adam Street, New York, NY 535022</p>
+                                <h3>Alamat</h3>
+                                <p>Jl. Raya Soreang</p>
                             </div>
                         </div><!-- End Info Item -->
                         <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="300">
                             <i class="bi bi-telephone flex-shrink-0"></i>
                             <div>
-                                <h3>Call Us</h3>
-                                <p>+1 5589 55488 55</p>
+                                <h3>Telepon</h3>
+                                <p>-</p>
+                            </div>
+                        </div><!-- End Info Item -->
+                        <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="300">
+                            <i class="bi bi-whatsapp flex-shrink-0"></i>
+                            <div>
+                                <h3>Whatsapp</h3>
+                                <p>-</p>
                             </div>
                         </div><!-- End Info Item -->
                         <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="400">
                             <i class="bi bi-envelope flex-shrink-0"></i>
                             <div>
-                                <h3>Email Us</h3>
-                                <p>info@example.com</p>
+                                <h3>Email</h3>
+                                <p>-</p>
                             </div>
                         </div><!-- End Info Item -->
                     </div>
 
                     <div class="col-lg-8">
-                        <form action="forms/contact.php" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
-                            <div class="row gy-4">
-                                <div class="col-md-6">
-                                    <input type="text" name="name" class="form-control" placeholder="Your Name" required="">
-                                </div>
-                                <div class="col-md-6">
-                                    <input type="email" class="form-control" name="email" placeholder="Your Email" required="">
-                                </div>
-                                <div class="col-md-12">
-                                    <input type="text" class="form-control" name="subject" placeholder="Subject" required="">
-                                </div>
-                                <div class="col-md-12">
-                                    <textarea class="form-control" name="message" rows="6" placeholder="Message" required=""></textarea>
-                                </div>
-                                <div class="col-md-12 text-center">
-                                    <div class="loading">Loading</div>
-                                    <div class="error-message"></div>
-                                    <div class="sent-message">Your message has been sent. Thank you!</div>
-                                    <button type="submit">Send Message</button>
-                                </div>
-                            </div>
-                        </form>
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3351.4793045661654!2d107.52488337415643!3d-7.020839892980816!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68ec329f509361%3A0x220e274e55f0494f!2sDinas%20Pendidikan%20Kabupaten%20Bandung!5e1!3m2!1sid!2sid!4v1727327527090!5m2!1sid!2sid" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </div><!-- End Contact Form -->
                 </div>
             </div>
@@ -187,39 +241,38 @@
                 <div class="col-lg-3 col-md-6 d-flex">
                     <i class="bi bi-geo-alt icon"></i>
                     <div class="address">
-                        <h4>Address</h4>
-                        <p>A108 Adam Street</p>
-                        <p>New York, NY 535022</p>
+                        <h4>Alamat</h4>
+                        <p>Jl. Raya Soreang</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 d-flex">
                     <i class="bi bi-telephone icon"></i>
                     <div>
-                        <h4>Contact</h4>
-                        <p><strong>Phone:</strong> <span>+1 5589 55488 55</span><br><strong>Email:</strong> <span>info@example.com</span><br></p>
+                        <h4>Kontak</h4>
+                        <p><strong>Telepon:</strong> <span>-</span><br><strong>Whatsapp:</strong> <span>-</span><br><strong>Email:</strong> <span>-</span><br></p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 d-flex">
                     <i class="bi bi-clock icon"></i>
                     <div>
-                        <h4>Opening Hours</h4>
-                        <p><strong>Mon-Sat:</strong> <span>11AM - 23PM</span><br><strong>Sunday</strong>: <span>Closed</span></p>
+                        <h4>Jam Layanan</h4>
+                        <p><strong>Senin-Jumat:</strong> <span>08.00 - 16.00 WIB</span><br><strong>Sabtu-Minggu</strong>: <span>Libur</span></p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
-                    <h4>Follow Us</h4>
+                    <h4>Media Sosial</h4>
                     <div class="social-links d-flex">
                         <a href="#" class="twitter"><i class="bi bi-twitter-x"></i></a>
                         <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
                         <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
-                        <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+                        <a href="#" class="youtube"><i class="bi bi-youtube"></i></a>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="container copyright text-center mt-4">
-            <p>© <span>Copyright</span> <strong class="px-1 sitename">Maundy</strong> <span>All Rights Reserved</span></p>
+            <p>© <span>Copyright</span> <strong class="px-1 sitename">DISKOMINFO X DISDIK KABUPATEN BANDUNG</p>
             <div class="credits">
                 Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
             </div>
