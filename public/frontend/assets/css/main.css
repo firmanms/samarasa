@@ -18,7 +18,7 @@
 }
 
 /* Global Colors - The following color variables are used throughout the website. Updating them here will change the color scheme of the entire website */
-:root { 
+:root {
   --background-color: #ffffff; /* Background color for the entire website, including individual sections */
   --default-color: #ffffff; /* Default color used for the majority of the text content across the entire website */
   --heading-color: #ffffff; /* Color for headings, subheadings and title throughout the website */
@@ -781,6 +781,18 @@ section,
   outline: none;
 }
 
+.hero .hero-newsletter .newsletter-form input[type=text] {
+    border: 0;
+    padding: 4px;
+    width: 100%;
+    background-color: var(--surface-color);
+    color: #212529;
+  }
+
+  .hero .hero-newsletter .newsletter-form input[type=text]:focus-visible {
+    outline: none;
+  }
+
 .hero .hero-newsletter .newsletter-form input[type=submit] {
   border: 0;
   font-size: 16px;
@@ -963,4 +975,23 @@ section,
 
 .contact .php-email-form button[type=submit]:hover {
   background: color-mix(in srgb, var(--accent-color), transparent 25%);
+}
+
+.custom-table {
+    border-collapse: collapse; /* Menggabungkan border tabel */
+    width: 100%; /* Mengatur lebar tabel */
+}
+
+.custom-table th, .custom-table td {
+    border: 1px solid #ddd; /* Border untuk sel */
+    padding: 8px; /* Padding dalam sel */
+}
+
+.custom-table th {
+    background-color: #f2f2f2; /* Warna latar belakang header */
+    text-align: left; /* Rata kiri untuk teks di header */
+}
+
+.custom-table tr:hover {
+    background-color: #f1f1f1; /* Warna latar belakang saat hover */
 }
