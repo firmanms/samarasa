@@ -23,7 +23,7 @@ class BackPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        //URL::forceScheme('https');
+        URL::forceScheme('https');
 
         return $panel
             ->default()
