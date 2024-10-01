@@ -38,7 +38,7 @@
 
             <nav id="navmenu" class="navmenu">
                 <ul>
-                    <li><a href="#hero" class="active">Home</a></li>
+                    <li><a href="{{url('/')}}" class="active">Home</a></li>
                     <li><a href="#about">Tentang</a></li>
                     <li><a href="#contact">Kontak</a></li>
                     <li><a href="{{url('/back')}}">Masuk</a></li>
