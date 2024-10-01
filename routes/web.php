@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
 
 Route::get('/', [FrontendController::class, 'index']);
-Route::post('/', [FrontendController::class, 'search'])->name('sekolah.cari');
+Route::post('/search', [FrontendController::class, 'search'])->name('sekolah.cari');
 // Route::match(['get', 'post'], '/samarasa', [FrontendController::class, 'search'])->name('sekolah.cari');
 
  Livewire::setScriptRoute(function ($handle) {

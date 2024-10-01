@@ -25,7 +25,7 @@ class FrontendController extends Controller
         // Ambil input dengan benar
         $query = $request->input('query');
         $token = $request->input('token');
-        dd($token,$query);
+        // dd($token,$query);
         // Mencari sekolah
         $sekolah = Sekolah::where('npsn', '=', $query)->where('token', '=', $token)->first();
 
