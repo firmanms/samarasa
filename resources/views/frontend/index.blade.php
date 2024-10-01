@@ -32,7 +32,7 @@
 
     <header id="header" class="header d-flex align-items-center px-3 fixed-top">
         <div class="container-fluid position-relative d-flex align-items-center justify-content-between">
-            <a href="index.html" class="logo d-flex align-items-center">
+            <a href="{{url('/')}}" class="logo d-flex align-items-center">
                 <h1 class="sitename">Samarasa</h1>
             </a>
 
