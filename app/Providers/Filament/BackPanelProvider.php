@@ -40,6 +40,7 @@ class BackPanelProvider extends PanelProvider
             ->navigationGroups([
                 'Data',
                 'Usulan',
+                'Laporan',
 
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')

@@ -63,12 +63,14 @@ class UsulanResource extends Resource
                             $set('bantuan_list', ''); // Reset jika tidak ada sekolah yang dipilih
                         }
                     })
+                    ->disabled(fn () => auth()->user()->hasAnyRole(['panel_approval']))
                     ->required(),
 
                 Forms\Components\Textarea::make('bantuan_list')
                     ->readonly() // agar textarea hanya untuk tampil
                     ->rows(10)
                     ->label('Riwayat Data Bantuan')
+                    ->disabled(fn () => auth()->user()->hasAnyRole(['panel_approval']))
                     ->default(fn ($get) => $get('bantuan_list') ?? ''),
                 Forms\Components\Select::make('databantuans_id')
                     ->label('Bantuan')
@@ -77,8 +79,13 @@ class UsulanResource extends Resource
                     // ->disabled(fn ($record) => $record ? $record->exists : false) // Menandai sebagai disabled jika record ada
                     ->preload()
                     ->live()
+                    ->disabled(fn () => auth()->user()->hasAnyRole(['panel_approval']))
                     ->required(),
-                Forms\Components\TextInput::make('tahun'),
+                Forms\Components\Select::make('tahun')
+                    ->label('Pilih Tahun')
+                    ->disabled(fn () => auth()->user()->hasAnyRole(['panel_approval']))
+                    ->options(static::getAvailableYears())
+                    ->required(),
                 Forms\Components\Select::make('sumberdana')
                     ->label('Sumber Dana')
                     ->multiple()
@@ -90,21 +97,23 @@ class UsulanResource extends Resource
                         'DAK Pusat' => 'DAK Pusat',
                         'Cek Ulang' => 'Cek Ulang',
                     ])
+                    ->disabled(fn () => auth()->user()->hasAnyRole(['panel_approval']))
                     ->required(),
                 Forms\Components\Select::make('status')
                     ->label('Status')
                     ->required()
                     ->options([
-                        'pending' => 'Pending',
-                        'process' => 'Proses',
-                        'success' => 'Diterima',
-                        'danger' => 'Ditolak',
+                        'Pending' => 'Pending',
+                        'Proses' => 'Proses',
+                        'Diterima' => 'Diterima',
+                        'Ditolak' => 'Ditolak',
                     ])
                     ->visible(fn () => auth()->user()->hasAnyRole(['super_admin', 'panel_approval'])),
                 Forms\Components\Textarea::make('catatan')
                     ->maxLength(255)
                     ->default(null),
-                Forms\Components\DatePicker::make('tgl_usulan'),
+                Forms\Components\DatePicker::make('tgl_usulan')
+                ->disabled(fn () => auth()->user()->hasAnyRole(['panel_approval'])),
             ]);
     }
 
@@ -115,29 +124,45 @@ class UsulanResource extends Resource
                 Tables\Columns\TextColumn::make('tgl_usulan')
                     ->date()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('sekolah.npsn')
+                    ->label('NPSN')
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('sekolah.nama_sekolah')
-                    ->numeric()
+                    ->label('Nama Sekolah')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('sekolah.kecamatan')
+                    ->label('Kecamatan')
+                    ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('databantuan.nama_bantuan')
-                    ->numeric()
+                    ->label('Jenis Bantuan')
+                    ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('tahun'),
-                Tables\Columns\TextColumn::make('sumberdana')
+                Tables\Columns\TextColumn::make('tahun')
+                    ->label('Tahun')
+                    ->sortable()
                     ->searchable(),
-                    Tables\Columns\TextColumn::make('status')
+                Tables\Columns\TextColumn::make('sumberdana')
+                    ->label('Sumber Dana')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('status')
                     ->badge()
+                    ->sortable()
                     ->searchable()
                     ->color(fn (string $state): string => match ($state) {
-                        'pending' => 'gray',
-                        'process' => 'warning',
-                        'success' => 'success',
-                        'danger' => 'danger',
+                        'Pending' => 'gray',
+                        'Proses' => 'warning',
+                        'Diterima' => 'success',
+                        'Ditolak' => 'danger',
                     })
                     ->formatStateUsing(fn ($state) => match ($state) {
-                        'pending' => 'Pending',
-                        'process' => 'Proses',
-                        'success' => 'Diterima',
-                        'danger' => 'Ditolak',
+                        'Pending' => 'Pending',
+                        'Proses' => 'Proses',
+                        'Diterima' => 'Diterima',
+                        'Ditolak' => 'Ditolak',
                         default => 'Unknown',
                     }),
                 Tables\Columns\TextColumn::make('catatan')
@@ -187,5 +212,14 @@ class UsulanResource extends Resource
             'create' => Pages\CreateUsulan::route('/create'),
             'edit' => Pages\EditUsulan::route('/{record}/edit'),
         ];
+    }
+
+    public static function getAvailableYears(): array // Make this static
+    {
+        // Create an array of years from the current year backward
+        $currentYear = date('Y') + 1;
+        $years = range($currentYear, $currentYear - 10);
+
+        return array_combine($years, $years);
     }
 }

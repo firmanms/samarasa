@@ -5,13 +5,17 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\BantuanResource\Pages;
 use App\Filament\Resources\BantuanResource\RelationManagers;
 use App\Models\Bantuan;
+use Filament\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\Action as ActionsAction;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\LaporanPenerimaBantuanExport;
 
 class BantuanResource extends Resource
 {
@@ -49,7 +53,10 @@ class BantuanResource extends Resource
                     ->preload()
                     ->live()
                     ->required(),
-                Forms\Components\TextInput::make('tahun'),
+                Forms\Components\Select::make('tahun')
+                    ->label('Pilih Tahun')
+                    ->options(static::getAvailableYears())
+                    ->required(),
                 Forms\Components\Select::make('sumberdana')
                     ->label('Sumber Dana')
                     ->multiple()
@@ -69,15 +76,27 @@ class BantuanResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('sekolah.npsn')
+                    ->label('NPSN')
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('sekolah.nama_sekolah')
+                    ->label('Nama Sekolah')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('sekolah.kecamatan')
+                    ->label('Kecamatan')
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('databantuan.nama_bantuan')
+                    ->label('Jenis Bantuan')
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('tahun')
+                    ->searchable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('sumberdana')
+                    ->label('Sumber Dana')
                     ->formatStateUsing(fn ($state) => is_array($state) ? implode(', ', $state) : $state)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -95,6 +114,21 @@ class BantuanResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make()
                 ->visible(fn () => auth()->user()->hasAnyRole(['super_admin', 'panel_user'])),
+            ])
+            ->headerActions([
+                ActionsAction::make('export')
+                    ->label('Export ke Excel')
+                    ->color('success')
+                    ->action(function () {
+                        // Get the current date
+                        $currentDate = now()->format('d-m-Y');
+
+                        // Generate the filename with the current date
+                        $filename = "laporanpenerimabantuan_{$currentDate}.xlsx";
+
+                        // Menghasilkan file Excel
+                        return Excel::download(new LaporanPenerimaBantuanExport, $filename);
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -118,5 +152,14 @@ class BantuanResource extends Resource
             'create' => Pages\CreateBantuan::route('/create'),
             'edit' => Pages\EditBantuan::route('/{record}/edit'),
         ];
+    }
+
+    public static function getAvailableYears(): array // Make this static
+    {
+        // Create an array of years from the current year backward
+        $currentYear = date('Y') + 1;
+        $years = range($currentYear, $currentYear - 10);
+
+        return array_combine($years, $years);
     }
 }

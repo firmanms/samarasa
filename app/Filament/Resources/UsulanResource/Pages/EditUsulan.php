@@ -5,6 +5,7 @@ namespace App\Filament\Resources\UsulanResource\Pages;
 use App\Filament\Resources\UsulanResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Support\Facades\Auth;
 
 class EditUsulan extends EditRecord
 {
@@ -17,4 +18,6 @@ class EditUsulan extends EditRecord
             ->visible(fn () => auth()->user()->hasAnyRole(['super_admin', 'panel_user'])),
         ];
     }
+
+
 }
