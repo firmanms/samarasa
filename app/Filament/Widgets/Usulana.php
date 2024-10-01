@@ -21,10 +21,10 @@ class Usulana extends BaseWidget
     {
         $usulanData = $this->getUsulanData();
         //dd($usulanData);
-        $totalPending=$usulanData->where('status','pending')->count();
-        $totalProses=$usulanData->where('status','process')->count();
-        $totalDiterima=$usulanData->where('status','success')->count();
-        $totalDitolak=$usulanData->where('status','danger')->count();
+        $totalPending=$usulanData->where('status','Pending')->count();
+        $totalProses=$usulanData->where('status','Proses')->count();
+        $totalDiterima=$usulanData->where('status','Diterima')->count();
+        $totalDitolak=$usulanData->where('status','Ditolak')->count();
         return [
             Stat::make('Usulan Pending', $totalPending),
             Stat::make('Usulan Proses', $totalProses),

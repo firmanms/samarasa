@@ -40,6 +40,7 @@ class BantuanResource extends Resource
                 Forms\Components\Select::make('sekolahs_id')
                     ->label('Sekolah')
                     ->relationship('sekolah', 'nama_sekolah')
+                    ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->npsn} - {$record->nama_sekolah}")
                     ->searchable()
                     // ->disabled(fn ($record) => $record ? $record->exists : false) // Menandai sebagai disabled jika record ada
                     ->preload()

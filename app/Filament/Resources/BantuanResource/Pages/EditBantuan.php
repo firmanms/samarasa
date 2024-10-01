@@ -26,7 +26,7 @@ class EditBantuan extends EditRecord
         $roleNames = $roles->implode(', ');
 
         // Periksa apakah user yang sedang login memiliki hak akses untuk mengedit usulan
-        if ( $roleNames !== 'super_admin') {
+        if (!in_array($roleNames, ['super_admin', 'panel_user'])) {
             abort(403, 'Unauthorized action.');
         }
     }

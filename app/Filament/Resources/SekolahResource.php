@@ -93,6 +93,8 @@ class SekolahResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('token')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('npsn')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('nama_sekolah')

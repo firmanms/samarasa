@@ -66,10 +66,10 @@
                             @csrf
                             <input placeholder="NPSN" type="text" name="query" value="{{ old('query', $query) }}">
                             <input
-                                type="text" name="captcha" class="form-control @error('captcha') is-invalid @enderror" placeholder="Kode Captcha"
+                                type="text" name="token" value="{{ old('token', $token) }}" class="form-control @error('token') is-invalid @enderror" placeholder="Token"
                                 >
                             <input type="submit" value="Cari "></div>
-                            <img src="{{ captcha_src() }}" alt="captcha">
+                            {{-- <img src="{{ captcha_src() }}" alt="captcha"> --}}
                             <div class="mt-2"></div>
 
                             @error('captcha')
@@ -79,8 +79,8 @@
                           <div class="sent-message">Your subscription request has been sent. Thank you!</div> --}}
                         </form>
                           @if(is_null($sekolah))
-                              {{-- <h3>Hasil Pencarian</h3>
-                              <p>Tidak ada sekolah yang ditemukan.</p> --}}
+                              {{-- <h3>Hasil Pencarian</h3>--}}
+                              <p>Tidak ada sekolah yang ditemukan.</p>
                           @else
                               <h3>Hasil Pencarian</h3>
                               <table class="custom-table">
